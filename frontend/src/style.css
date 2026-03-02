@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-client {
+    @apply btn-primary bg-client hover:bg-teal-600 text-white focus:ring-client;
+  }
+  
+  .btn-judge {
+    @apply btn-primary bg-judge hover:bg-purple-600 text-white focus:ring-judge;
+  }
+  
+  .btn-admin {
+    @apply btn-primary bg-admin hover:bg-red-600 text-white focus:ring-admin;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+}
