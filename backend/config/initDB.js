@@ -24,6 +24,7 @@ const initDB = async () => {
         description TEXT,
         status VARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected', 'Rescheduled', 'Completed')),
         remarks TEXT,
+        deleted_at TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
