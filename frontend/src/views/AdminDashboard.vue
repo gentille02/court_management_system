@@ -1,45 +1,117 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <nav class="bg-admin text-white p-4 shadow-lg">
-      <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Administrator Dashboard</h1>
-        <button @click="logout" class="px-4 py-2 bg-white text-admin rounded-lg hover:bg-gray-100">Logout</button>
-      </div>
-    </nav>
+  <div class="flex min-h-screen" style="background: var(--bg-base);">
+    <!-- Sidebar -->
+    <aside class="w-1/4 min-h-screen sticky top-0" style="background: var(--bg-panel); border-right: 1px solid var(--border);">
+      <div class="p-6">
+        <!-- Logo -->
+        <div class="flex items-center justify-center gap-3 mb-6">
+          <div class="text-4xl">⚖️</div>
+          <h1 class="text-3xl font-bold" style="font-family: 'Syne', sans-serif; color: var(--text-1);">CMS</h1>
+        </div>
 
-    <main class="container mx-auto p-6">
+        <!-- Profile Card -->
+        <div class="mb-6" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
+          <div class="flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-4"
+                 style="background: linear-gradient(135deg, var(--accent-admin), #fb7185);">
+              {{ authStore.user?.name?.charAt(0).toUpperCase() || '?' }}
+            </div>
+            <h2 class="text-lg font-bold mb-1" style="color: var(--text-1);">{{ authStore.user?.name }}</h2>
+            <p class="text-sm mb-4" style="color: var(--text-3);">{{ authStore.user?.email }}</p>
+            <div class="w-full pt-4" style="border-top: 1px solid var(--border);">
+              <p class="text-xs font-semibold mb-2" style="color: var(--text-2); text-transform: uppercase;">Role</p>
+              <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
+                    style="background: rgba(255, 101, 132, 0.15); color: var(--accent-admin);">
+                Administrator
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="space-y-2">
+          <button 
+            @click="showManageUsers = true" 
+            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
+          >
+            <span class="text-sm font-medium">👥 Manage Users</span>
+          </button>
+          <button 
+            @click="showSystemSettings = true" 
+            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
+          >
+            <span class="text-sm font-medium">⚙️ System Settings</span>
+          </button>
+          <button 
+            @click="showReports = true" 
+            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
+          >
+            <span class="text-sm font-medium">📊 Reports</span>
+          </button>
+          <button 
+            @click="logout" 
+            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
+          >
+            <span class="text-sm font-medium">🚪 Logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+
       <!-- Stats Cards -->
-      <section class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+      <section aria-label="Appointment Statistics" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <div class="card text-center">
-          <p class="text-3xl font-bold text-yellow-600">{{ stats.pending }}</p>
-          <p class="text-sm text-gray-600">Pending</p>
+          <p class="text-3xl font-bold text-yellow-400">{{ stats.pending }}</p>
+          <p class="text-sm" style="color: var(--text-2);">Pending</p>
         </div>
         <div class="card text-center">
-          <p class="text-3xl font-bold text-green-600">{{ stats.approved }}</p>
-          <p class="text-sm text-gray-600">Approved</p>
+          <p class="text-3xl font-bold text-green-400">{{ stats.approved }}</p>
+          <p class="text-sm" style="color: var(--text-2);">Approved</p>
         </div>
         <div class="card text-center">
-          <p class="text-3xl font-bold text-red-600">{{ stats.rejected }}</p>
-          <p class="text-sm text-gray-600">Rejected</p>
+          <p class="text-3xl font-bold" style="color: var(--accent-admin);">{{ stats.rejected }}</p>
+          <p class="text-sm" style="color: var(--text-2);">Rejected</p>
         </div>
         <div class="card text-center">
-          <p class="text-3xl font-bold text-blue-600">{{ stats.rescheduled }}</p>
-          <p class="text-sm text-gray-600">Rescheduled</p>
+          <p class="text-3xl font-bold text-blue-400">{{ stats.rescheduled }}</p>
+          <p class="text-sm" style="color: var(--text-2);">Rescheduled</p>
         </div>
         <div class="card text-center">
-          <p class="text-3xl font-bold text-gray-600">{{ stats.completed }}</p>
-          <p class="text-sm text-gray-600">Completed</p>
+          <p class="text-3xl font-bold" style="color: var(--text-2);">{{ stats.completed }}</p>
+          <p class="text-sm" style="color: var(--text-2);">Completed</p>
         </div>
       </section>
 
       <div class="grid md:grid-cols-3 gap-6">
-        
+
         <!-- Appointments List -->
-        <section class="md:col-span-1 card">
-          <h2 class="text-xl font-bold mb-4">📋 All Appointments</h2>
-          
+        <section class="md:col-span-1 card" aria-label="Appointments List">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold" style="color: var(--text-1);">📋 All Appointments</h2>
+            <button
+              @click="toggleDeletedView"
+              class="text-sm px-3 py-1 rounded transition-all hover:opacity-80"
+              style="background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border);"
+            >
+              {{ showDeleted ? 'Active' : 'Deleted' }}
+            </button>
+          </div>
+
+          <!-- Filter -->
           <div class="mb-4">
-            <select v-model="filterStatus" class="input-field focus:ring-admin text-sm">
+            <label for="filter-status" class="sr-only">Filter by status</label>
+            <select 
+              id="filter-status"
+              v-model="filterStatus" 
+              class="input-field text-sm"
+            >
               <option value="">All Status</option>
               <option value="Pending">Pending</option>
               <option value="Approved">Approved</option>
@@ -49,20 +121,28 @@
             </select>
           </div>
 
-          <div v-if="filteredAppointments.length === 0" class="text-gray-500 text-center py-8">
-            No appointments found
+          <!-- Loading state -->
+          <div v-if="appointmentStore.loading" class="text-center py-8" style="color: var(--text-3);">
+            Loading...
+          </div>
+
+          <div v-else-if="currentAppointments.length === 0" 
+               class="text-center py-8" style="color: var(--text-3);">
+            {{ showDeleted ? 'No deleted appointments' : 'No appointments found' }}
           </div>
 
           <div v-else class="space-y-2 max-h-96 overflow-y-auto">
             <button
-              v-for="apt in filteredAppointments"
+              v-for="apt in currentAppointments"
               :key="apt.id"
               @click="selectAppointment(apt)"
-              :class="selectedAppointment?.id === apt.id ? 'bg-admin text-white' : 'bg-gray-100 hover:bg-gray-200'"
               class="w-full text-left p-3 rounded-lg transition-colors"
+              :style="selectedAppointment?.id === apt.id 
+                ? 'background: var(--accent-admin); color: white;' 
+                : 'background: var(--bg-hover); color: var(--text-1);'"
             >
               <p class="font-semibold text-sm">{{ apt.service }}</p>
-              <p class="text-xs opacity-80">{{ apt.clientName }}</p>
+              <p class="text-xs opacity-80">{{ apt.client_name || 'No client name' }}</p>
               <div class="flex justify-between items-center mt-1">
                 <span class="text-xs opacity-70">📅 {{ apt.date }}</span>
                 <span :class="getStatusClass(apt.status)" class="px-2 py-0.5 rounded text-xs">
@@ -74,72 +154,85 @@
         </section>
 
         <!-- Appointment Details & Actions -->
-        <section class="md:col-span-2 card">
-          <div v-if="!selectedAppointment" class="text-gray-500 text-center py-16">
+        <section class="md:col-span-2 card" aria-label="Appointment Details">
+          <div v-if="!selectedAppointment" 
+               class="text-center py-16" style="color: var(--text-3);">
             Select an appointment to manage
           </div>
 
           <div v-else>
-            <h2 class="text-xl font-bold mb-4">📁 Appointment Details</h2>
-            
+            <h2 class="text-xl font-bold mb-4" style="color: var(--text-1);">📁 Appointment Details</h2>
+
             <div class="space-y-4">
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <p><strong>Service:</strong> {{ selectedAppointment.service }}</p>
-                <p><strong>Client:</strong> {{ selectedAppointment.clientName }}</p>
-                <p><strong>Email:</strong> {{ selectedAppointment.clientEmail }}</p>
-                <p><strong>Date:</strong> {{ selectedAppointment.date }}</p>
-                <p><strong>Status:</strong> 
-                  <span :class="getStatusClass(selectedAppointment.status)" class="px-2 py-1 rounded text-xs">
+              <!-- Details -->
+              <div class="p-4 rounded-lg" style="background: var(--bg-hover); border: 1px solid var(--border);">
+                <p style="color: var(--text-1);"><strong>Service:</strong> {{ selectedAppointment.service }}</p>
+                <p style="color: var(--text-1);"><strong>Client:</strong> {{ selectedAppointment.client_name || 'No client name' }}</p>
+                <p style="color: var(--text-1);"><strong>Email:</strong> {{ selectedAppointment.client_email || 'No email' }}</p>
+                <p style="color: var(--text-1);"><strong>Date:</strong> {{ selectedAppointment.date }}</p>
+                <p style="color: var(--text-1);">
+                  <strong>Status:</strong>
+                  <span :class="getStatusClass(selectedAppointment.status)" 
+                        class="px-2 py-1 rounded text-xs font-semibold ml-1">
                     {{ selectedAppointment.status }}
                   </span>
                 </p>
-                <p v-if="selectedAppointment.description" class="mt-2">
-                  <strong>Description:</strong> {{ selectedAppointment.description }}
+                <p v-if="selectedAppointment.description" class="mt-2" style="color: var(--text-2);">
+                  <strong style="color: var(--text-1);">Description:</strong> {{ selectedAppointment.description }}
                 </p>
               </div>
 
               <!-- Documents -->
               <div>
-                <h3 class="font-semibold mb-2">📄 Client Documents</h3>
+                <h3 class="font-semibold mb-2" style="color: var(--text-1);">📄 Client Documents</h3>
                 <div v-if="selectedAppointment.documents?.length" class="space-y-2">
-                  <a
+                  
                     v-for="(doc, idx) in selectedAppointment.documents"
                     :key="idx"
                     :href="doc.url"
                     target="_blank"
-                    class="block p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                    rel="noopener noreferrer"
+                    class="block p-3 rounded-lg transition-colors hover:opacity-80"
+                    style="background: var(--bg-hover); color: var(--accent-judge); border: 1px solid var(--border);"
                   >
                     📎 {{ doc.name }}
                   </a>
                 </div>
-                <p v-else class="text-gray-500">No documents uploaded</p>
+                <p v-else style="color: var(--text-3);">No documents uploaded</p>
               </div>
 
               <!-- Admin Actions -->
-              <div class="border-t pt-4">
-                <h3 class="font-semibold mb-3">⚙️ Admin Actions</h3>
-                
+              <div v-if="!showDeleted" class="border-t pt-4" style="border-color: var(--border);">
+                <h3 class="font-semibold mb-3" style="color: var(--text-1);">⚙️ Admin Actions</h3>
+
                 <div class="space-y-3">
                   <!-- Approve -->
-                  <button 
+                  <button
                     v-if="selectedAppointment.status === 'Pending'"
-                    @click="updateStatus('Approved')" 
-                    class="w-full btn-primary bg-green-600 hover:bg-green-700 text-white focus:ring-green-500"
+                    @click="handleUpdateStatus('Approved')"
+                    :disabled="appointmentStore.loading"
+                    class="w-full btn-primary"
+                    style="background: #16a34a; color: white;"
                   >
                     ✅ Approve Appointment
                   </button>
 
                   <!-- Reject -->
                   <div v-if="selectedAppointment.status === 'Pending'">
+                    <label for="reject-reason" class="block text-sm font-medium mb-1"
+                           style="color: var(--text-2);">Reason for rejection</label>
                     <input
+                      id="reject-reason"
                       v-model="rejectReason"
                       type="text"
                       placeholder="Reason for rejection..."
-                      class="input-field focus:ring-admin mb-2"
+                      class="input-field mb-2"
                     />
-                    <button 
-                      @click="updateStatus('Rejected')" 
-                      class="w-full btn-primary bg-red-600 hover:bg-red-700 text-white focus:ring-red-500"
+                    <button
+                      @click="handleUpdateStatus('Rejected')"
+                      :disabled="appointmentStore.loading"
+                      class="w-full btn-primary"
+                      style="background: #dc2626; color: white;"
                     >
                       ❌ Reject Appointment
                     </button>
@@ -147,36 +240,57 @@
 
                   <!-- Reschedule -->
                   <div>
-                    <label class="block text-sm font-medium mb-1">Reschedule to:</label>
+                    <label for="new-date" class="block text-sm font-medium mb-1"
+                           style="color: var(--text-2);">Reschedule to:</label>
                     <div class="flex gap-2">
                       <input
+                        id="new-date"
                         v-model="newDate"
                         type="date"
-                        class="input-field focus:ring-admin flex-1"
+                        class="input-field flex-1"
                       />
-                      <button @click="reschedule" class="btn-admin">📅 Reschedule</button>
+                      <button 
+                        @click="handleReschedule" 
+                        :disabled="appointmentStore.loading"
+                        class="btn-admin"
+                      >
+                        📅 Reschedule
+                      </button>
                     </div>
                   </div>
 
                   <!-- Assign Judge -->
                   <div v-if="selectedAppointment.status === 'Approved'">
-                    <label class="block text-sm font-medium mb-1">Assign Judge:</label>
+                    <label for="assign-judge" class="block text-sm font-medium mb-1"
+                           style="color: var(--text-2);">Assign Judge:</label>
                     <div class="flex gap-2">
-                      <select v-model="assignedJudge" class="input-field focus:ring-admin flex-1">
+                      <select 
+                        id="assign-judge"
+                        v-model="assignedJudge" 
+                        class="input-field flex-1"
+                      >
                         <option value="">Select Judge</option>
                         <option v-for="judge in judges" :key="judge.id" :value="judge.id">
                           {{ judge.name }}
                         </option>
                       </select>
-                      <button @click="assignJudge" class="btn-admin">Assign</button>
+                      <button 
+                        @click="handleAssignJudge" 
+                        :disabled="appointmentStore.loading"
+                        class="btn-admin"
+                      >
+                        Assign
+                      </button>
                     </div>
                   </div>
 
                   <!-- Complete -->
-                  <button 
+                  <button
                     v-if="selectedAppointment.status === 'Approved' || selectedAppointment.status === 'Rescheduled'"
-                    @click="updateStatus('Completed')" 
-                    class="w-full btn-primary bg-gray-600 hover:bg-gray-700 text-white focus:ring-gray-500"
+                    @click="handleUpdateStatus('Completed')"
+                    :disabled="appointmentStore.loading"
+                    class="w-full btn-primary"
+                    style="background: #4b5563; color: white;"
                   >
                     ✔️ Mark as Completed
                   </button>
@@ -185,54 +299,138 @@
             </div>
           </div>
         </section>
-
       </div>
 
-      <p v-if="message" :class="messageClass" class="mt-4 p-3 rounded-lg text-center" role="alert">
-        {{ message }}
+      <!-- Feedback Messages -->
+      <p v-if="appointmentStore.error" 
+         class="mt-4 p-3 rounded-lg text-center bg-red-100 text-red-800" 
+         role="alert">
+        ❌ {{ appointmentStore.error }}
+      </p>
+      <p v-if="successMessage" 
+         class="mt-4 p-3 rounded-lg text-center bg-green-100 text-green-800" 
+         role="alert">
+        ✅ {{ successMessage }}
       </p>
     </main>
+
+    <!-- Manage Users Modal -->
+    <ManageUsersModal
+      :show="showManageUsers"
+      :users="allUsers"
+      @close="showManageUsers = false"
+      @add-user="handleAddUser"
+      @edit-user="handleEditUser"
+      @toggle-status="handleToggleStatus"
+    />
+
+    <!-- System Settings Modal -->
+    <div v-if="showSystemSettings" 
+         @click="showSystemSettings = false" 
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div @click.stop class="rounded-lg p-6 max-w-md w-full mx-4"
+           style="background: var(--bg-card); border: 1px solid var(--border);">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold" style="color: var(--text-1);">⚙️ System Settings</h3>
+          <button @click="showSystemSettings = false" 
+                  class="text-2xl" style="color: var(--text-2);">&times;</button>
+        </div>
+        <div class="space-y-3" style="color: var(--text-2);">
+          <p>🔔 Notifications: Enabled</p>
+          <p>📧 Email Alerts: Active</p>
+          <p>🔒 Security: 2FA Disabled</p>
+          <p>🌐 Language: English</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Modal -->
+    <div v-if="showReports" 
+         @click="showReports = false" 
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div @click.stop class="rounded-lg p-6 max-w-md w-full mx-4"
+           style="background: var(--bg-card); border: 1px solid var(--border);">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold" style="color: var(--text-1);">📊 Reports</h3>
+          <button @click="showReports = false" 
+                  class="text-2xl" style="color: var(--text-2);">&times;</button>
+        </div>
+        <div class="space-y-3" style="color: var(--text-2);">
+          <p>📈 Total Appointments: {{ appointmentStore.appointments.length }}</p>
+          <p>✅ Completed: {{ stats.completed }}</p>
+          <p>⏳ Pending: {{ stats.pending }}</p>
+          <p>❌ Rejected: {{ stats.rejected }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
+import { useAppointmentStore } from '../stores/appointment'
+import { useStatusClass } from '../composables/useStatusClass'
+import ManageUsersModal from '../components/ManageUsersModal.vue'
 import api from '../utils/api'
 
 export default {
   name: 'AdminDashboard',
+  components: { ManageUsersModal },
   setup() {
     const router = useRouter()
-    const appointments = ref([])
+    const authStore = useAuthStore()
+    const appointmentStore = useAppointmentStore()
+    const { getStatusClass } = useStatusClass()
+
     const selectedAppointment = ref(null)
     const filterStatus = ref('')
+    const showDeleted = ref(false)
+    const deletedAppointments = ref([])
     const rejectReason = ref('')
     const newDate = ref('')
     const assignedJudge = ref('')
     const judges = ref([])
-    const message = ref('')
-    const messageClass = ref('')
+    const allUsers = ref([])
+    const successMessage = ref('')
 
+    // Modal visibility
+    const showManageUsers = ref(false)
+    const showSystemSettings = ref(false)
+    const showReports = ref(false)
+
+    // Stats computed from store
     const stats = computed(() => ({
-      pending: appointments.value.filter(a => a.status === 'Pending').length,
-      approved: appointments.value.filter(a => a.status === 'Approved').length,
-      rejected: appointments.value.filter(a => a.status === 'Rejected').length,
-      rescheduled: appointments.value.filter(a => a.status === 'Rescheduled').length,
-      completed: appointments.value.filter(a => a.status === 'Completed').length
+      pending: appointmentStore.appointments.filter(a => a.status === 'Pending').length,
+      approved: appointmentStore.appointments.filter(a => a.status === 'Approved').length,
+      rejected: appointmentStore.appointments.filter(a => a.status === 'Rejected').length,
+      rescheduled: appointmentStore.appointments.filter(a => a.status === 'Rescheduled').length,
+      completed: appointmentStore.appointments.filter(a => a.status === 'Completed').length
     }))
 
     const filteredAppointments = computed(() => {
-      if (!filterStatus.value) return appointments.value
-      return appointments.value.filter(a => a.status === filterStatus.value)
+      if (!filterStatus.value) return appointmentStore.appointments
+      return appointmentStore.appointments.filter(a => a.status === filterStatus.value)
     })
 
-    const fetchAppointments = async () => {
+    const currentAppointments = computed(() =>
+      showDeleted.value ? deletedAppointments.value : filteredAppointments.value
+    )
+
+    const toggleDeletedView = async () => {
+      showDeleted.value = !showDeleted.value
+      if (showDeleted.value && deletedAppointments.value.length === 0) {
+        await fetchDeletedAppointments()
+      }
+    }
+
+    const fetchDeletedAppointments = async () => {
       try {
-        const response = await api.get('/appointments')
-        appointments.value = response.data
+        const response = await api.get('/appointments/deleted')
+        deletedAppointments.value = response.data
       } catch (err) {
-        console.error('Failed to fetch appointments', err)
+        console.error('Failed to fetch deleted appointments', err)
       }
     }
 
@@ -245,6 +443,15 @@ export default {
       }
     }
 
+    const fetchAllUsers = async () => {
+      try {
+        const response = await api.get('/users')
+        allUsers.value = response.data
+      } catch (err) {
+        console.error('Failed to fetch users', err)
+      }
+    }
+
     const selectAppointment = (apt) => {
       selectedAppointment.value = apt
       rejectReason.value = ''
@@ -252,103 +459,122 @@ export default {
       assignedJudge.value = apt.assignedJudge || ''
     }
 
-    const updateStatus = async (status) => {
+    const handleUpdateStatus = async (status) => {
       if (status === 'Rejected' && !rejectReason.value) {
-        message.value = '⚠️ Please provide a reason for rejection'
-        messageClass.value = 'bg-yellow-100 text-yellow-800'
         return
       }
-
       try {
-        await api.patch(`/appointments/${selectedAppointment.value.id}/status`, { 
+        await appointmentStore.updateStatus(
+          selectedAppointment.value.id,
           status,
-          remarks: status === 'Rejected' ? rejectReason.value : undefined
-        })
-        message.value = `✅ Appointment ${status.toLowerCase()} successfully`
-        messageClass.value = 'bg-green-100 text-green-800'
-        fetchAppointments()
-      } catch (err) {
-        message.value = '❌ Failed to update status'
-        messageClass.value = 'bg-red-100 text-red-800'
+          status === 'Rejected' ? rejectReason.value : undefined
+        )
+        successMessage.value = `Appointment ${status.toLowerCase()} successfully`
+        selectedAppointment.value = null
+        setTimeout(() => { successMessage.value = '' }, 3000)
+      } catch {
+        // error shown from store
       }
     }
 
-    const reschedule = async () => {
-      if (!newDate.value) {
-        message.value = '⚠️ Please select a new date'
-        messageClass.value = 'bg-yellow-100 text-yellow-800'
-        return
-      }
-
+    const handleReschedule = async () => {
+      if (!newDate.value) return
       try {
-        await api.patch(`/appointments/${selectedAppointment.value.id}/reschedule`, { date: newDate.value })
-        message.value = '✅ Appointment rescheduled successfully'
-        messageClass.value = 'bg-green-100 text-green-800'
+        await appointmentStore.reschedule(selectedAppointment.value.id, newDate.value)
+        await appointmentStore.fetchAllAppointments()
+        successMessage.value = 'Appointment rescheduled successfully'
         newDate.value = ''
-        fetchAppointments()
-      } catch (err) {
-        message.value = '❌ Failed to reschedule'
-        messageClass.value = 'bg-red-100 text-red-800'
+        setTimeout(() => { successMessage.value = '' }, 3000)
+      } catch {
+        // error shown from store
       }
     }
 
-    const assignJudge = async () => {
-      if (!assignedJudge.value) {
-        message.value = '⚠️ Please select a judge'
-        messageClass.value = 'bg-yellow-100 text-yellow-800'
-        return
-      }
-
+    const handleAssignJudge = async () => {
+      if (!assignedJudge.value) return
       try {
-        await api.patch(`/appointments/${selectedAppointment.value.id}/assign`, { judgeId: assignedJudge.value })
-        message.value = '✅ Judge assigned successfully'
-        messageClass.value = 'bg-green-100 text-green-800'
-        fetchAppointments()
+        await api.patch(`/appointments/${selectedAppointment.value.id}/assign`, {
+          judgeId: assignedJudge.value
+        })
+        await appointmentStore.fetchAllAppointments()
+        successMessage.value = 'Judge assigned successfully'
+        setTimeout(() => { successMessage.value = '' }, 3000)
       } catch (err) {
-        message.value = '❌ Failed to assign judge'
-        messageClass.value = 'bg-red-100 text-red-800'
+        console.error('Failed to assign judge', err)
       }
     }
 
-    const getStatusClass = (status) => {
-      const classes = {
-        'Pending': 'bg-yellow-100 text-yellow-800',
-        'Approved': 'bg-green-100 text-green-800',
-        'Rejected': 'bg-red-100 text-red-800',
-        'Rescheduled': 'bg-blue-100 text-blue-800',
-        'Completed': 'bg-gray-100 text-gray-800'
+    const handleAddUser = async (userData) => {
+      try {
+        await api.post('/auth/register', userData)
+        await fetchAllUsers()
+        successMessage.value = 'User added successfully'
+        setTimeout(() => { successMessage.value = '' }, 3000)
+      } catch (err) {
+        console.error('Failed to add user', err)
       }
-      return classes[status] || 'bg-gray-100 text-gray-800'
+    }
+
+    const handleEditUser = async (user) => {
+      try {
+        await api.put(`/users/${user.id}`, user)
+        await fetchAllUsers()
+        successMessage.value = 'User updated successfully'
+        setTimeout(() => { successMessage.value = '' }, 3000)
+      } catch (err) {
+        console.error('Failed to edit user', err)
+      }
+    }
+
+    const handleToggleStatus = async (user) => {
+      try {
+        await api.patch(`/users/${user.id}/toggle-status`)
+        await fetchAllUsers()
+        successMessage.value = `User ${user.active ? 'deactivated' : 'activated'} successfully`
+        setTimeout(() => { successMessage.value = '' }, 3000)
+      } catch (err) {
+        console.error('Failed to toggle user status', err)
+      }
     }
 
     const logout = () => {
-      localStorage.clear()
+      authStore.logout()
       router.push('/login')
     }
 
     onMounted(() => {
-      fetchAppointments()
+      appointmentStore.fetchAllAppointments()
       fetchJudges()
+      fetchAllUsers()
     })
 
-    return { 
-      appointments, 
-      selectedAppointment, 
-      filterStatus, 
-      filteredAppointments,
+    return {
+      authStore,
+      appointmentStore,
+      selectedAppointment,
+      filterStatus,
+      showDeleted,
+      currentAppointments,
       stats,
-      rejectReason, 
-      newDate, 
+      rejectReason,
+      newDate,
       assignedJudge,
       judges,
-      message, 
-      messageClass, 
-      selectAppointment, 
-      updateStatus, 
-      reschedule,
-      assignJudge,
-      getStatusClass, 
-      logout 
+      allUsers,
+      successMessage,
+      showManageUsers,
+      showSystemSettings,
+      showReports,
+      getStatusClass,
+      toggleDeletedView,
+      selectAppointment,
+      handleUpdateStatus,
+      handleReschedule,
+      handleAssignJudge,
+      handleAddUser,
+      handleEditUser,
+      handleToggleStatus,
+      logout
     }
   }
 }

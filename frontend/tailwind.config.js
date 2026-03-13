@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
@@ -7,9 +6,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        client: '#14b8a6',
-        judge: '#a855f7',
-        admin: '#ef4444'
+        client: '#43e97b',
+        judge: '#a78bfa',
+        admin: '#ff6584'
       }
     },
   },

@@ -10,6 +10,8 @@ A comprehensive web-based Court Management System with role-based access for Cli
 - Upload case documents (PDF, JPG, PNG)
 - Track appointment status in real-time
 - Receive status notifications
+- **Edit pending appointments**
+- **Delete pending appointments** (soft delete)
 
 ### Judge Features
 - View assigned cases
@@ -25,6 +27,7 @@ A comprehensive web-based Court Management System with role-based access for Cli
 - Mark appointments as completed
 - View all client files
 - Dashboard with statistics
+- **View deleted appointments history**
 
 ## Tech Stack
 
@@ -124,10 +127,20 @@ CMS_project/
 ## Appointment Lifecycle
 
 1. **Pending** - Client books appointment
-2. **Approved** - Admin approves and assigns to judge
-3. **Rejected** - Admin rejects with reason
-4. **Rescheduled** - Admin or Judge changes date
-5. **Completed** - Admin marks as done
+2. **Approved** - Admin approves appointment
+3. **Assigned** - Admin assigns judge (Judge can now see it!)
+4. **Rejected** - Admin rejects with reason
+5. **Rescheduled** - Admin or Judge changes date
+6. **Completed** - Admin marks as done
+
+### Important: Judge Dashboard
+Judges will ONLY see cases that are:
+- ✅ Approved by admin
+- ✅ Assigned to them specifically
+
+If judge dashboard is empty, admin needs to:
+1. Approve pending appointments
+2. Assign them to the judge
 
 ## Color Themes (Role-based)
 

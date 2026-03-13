@@ -9,9 +9,24 @@ const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: Login, name: 'Login' },
   { path: '/register', component: Register, name: 'Register' },
-  { path: '/client', component: ClientDashboard, name: 'ClientDashboard', meta: { role: 'client' } },
-  { path: '/judge', component: JudgeDashboard, name: 'JudgeDashboard', meta: { role: 'judge' } },
-  { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { role: 'admin' } }
+  { 
+    path: '/client', 
+    component: ClientDashboard, 
+    name: 'ClientDashboard', 
+    meta: { requiresAuth: true, role: 'client' } 
+  },
+  { 
+    path: '/judge', 
+    component: JudgeDashboard, 
+    name: 'JudgeDashboard', 
+    meta: { requiresAuth: true, role: 'judge' } 
+  },
+  { 
+    path: '/admin', 
+    component: AdminDashboard, 
+    name: 'AdminDashboard', 
+    meta: { requiresAuth: true, role: 'admin' } 
+  }
 ]
 
 const router = createRouter({
@@ -20,13 +35,30 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
   const user = JSON.parse(localStorage.getItem('user') || '{}')
-  
-  if (to.meta.role && user.role !== to.meta.role) {
-    next('/login')
-  } else {
-    next()
+  const publicRoutes = ['/login', '/register']
+
+  // Not logged in trying to access protected route
+  if (to.meta.requiresAuth && !token) {
+    return next('/login')
   }
+
+  // Wrong role trying to access a dashboard
+  if (to.meta.role && user.role !== to.meta.role) {
+    if (token) {
+      // Logged in but wrong role — send to their correct dashboard
+      return next(`/${user.role}`)
+    }
+    return next('/login')
+  }
+
+  // Already logged in trying to visit login/register
+  if (publicRoutes.includes(to.path) && token) {
+    return next(`/${user.role}`)
+  }
+
+  next()
 })
 
 export default router
