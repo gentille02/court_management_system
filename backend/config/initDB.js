@@ -10,9 +10,22 @@ const initDB = async () => {
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) DEFAULT 'client' CHECK (role IN ('client', 'judge', 'admin')),
         phone VARCHAR(50),
+        staff_id VARCHAR(50) UNIQUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    // Add staff_id column if it doesn't exist
+    try {
+      await pool.query(`
+        ALTER TABLE users ADD COLUMN staff_id VARCHAR(50) UNIQUE;
+      `);
+    } catch (err) {
+      // Column already exists, ignore error
+      if (!err.message.includes('already exists')) {
+        console.log('staff_id column already exists');
+      }
+    }
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS appointments (

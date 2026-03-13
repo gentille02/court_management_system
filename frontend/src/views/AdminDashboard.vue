@@ -35,14 +35,7 @@
             class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
             style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
           >
-            <span class="text-sm font-medium">👥 Manage Users</span>
-          </button>
-          <button 
-            @click="showSystemSettings = true" 
-            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
-            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
-          >
-            <span class="text-sm font-medium">⚙️ System Settings</span>
+            <span class="text-sm font-medium">👥 System Users</span>
           </button>
           <button 
             @click="showReports = true" 
@@ -100,7 +93,7 @@
               class="text-sm px-3 py-1 rounded transition-all hover:opacity-80"
               style="background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border);"
             >
-              {{ showDeleted ? 'Active' : 'Deleted' }}
+              {{ showDeleted ? 'Active' : 'Cancelled' }}
             </button>
           </div>
 
@@ -128,7 +121,7 @@
 
           <div v-else-if="currentAppointments.length === 0" 
                class="text-center py-8" style="color: var(--text-3);">
-            {{ showDeleted ? 'No deleted appointments' : 'No appointments found' }}
+            {{ showDeleted ? 'No cancelled appointments' : 'No appointments found' }}
           </div>
 
           <div v-else class="space-y-2 max-h-96 overflow-y-auto">
@@ -186,7 +179,7 @@
               <div>
                 <h3 class="font-semibold mb-2" style="color: var(--text-1);">📄 Client Documents</h3>
                 <div v-if="selectedAppointment.documents?.length" class="space-y-2">
-                  
+                  <a
                     v-for="(doc, idx) in selectedAppointment.documents"
                     :key="idx"
                     :href="doc.url"
@@ -319,30 +312,8 @@
       :show="showManageUsers"
       :users="allUsers"
       @close="showManageUsers = false"
-      @add-user="handleAddUser"
-      @edit-user="handleEditUser"
-      @toggle-status="handleToggleStatus"
+      @user-added="async () => { await fetchAllUsers(); await fetchJudges(); }"
     />
-
-    <!-- System Settings Modal -->
-    <div v-if="showSystemSettings" 
-         @click="showSystemSettings = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div @click.stop class="rounded-lg p-6 max-w-md w-full mx-4"
-           style="background: var(--bg-card); border: 1px solid var(--border);">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-xl font-bold" style="color: var(--text-1);">⚙️ System Settings</h3>
-          <button @click="showSystemSettings = false" 
-                  class="text-2xl" style="color: var(--text-2);">&times;</button>
-        </div>
-        <div class="space-y-3" style="color: var(--text-2);">
-          <p>🔔 Notifications: Enabled</p>
-          <p>📧 Email Alerts: Active</p>
-          <p>🔒 Security: 2FA Disabled</p>
-          <p>🌐 Language: English</p>
-        </div>
-      </div>
-    </div>
 
     <!-- Reports Modal -->
     <div v-if="showReports" 
@@ -397,7 +368,6 @@ export default {
 
     // Modal visibility
     const showManageUsers = ref(false)
-    const showSystemSettings = ref(false)
     const showReports = ref(false)
 
     // Stats computed from store
@@ -504,45 +474,16 @@ export default {
       }
     }
 
-    const handleAddUser = async (userData) => {
-      try {
-        await api.post('/auth/register', userData)
-        await fetchAllUsers()
-        successMessage.value = 'User added successfully'
-        setTimeout(() => { successMessage.value = '' }, 3000)
-      } catch (err) {
-        console.error('Failed to add user', err)
-      }
-    }
-
-    const handleEditUser = async (user) => {
-      try {
-        await api.put(`/users/${user.id}`, user)
-        await fetchAllUsers()
-        successMessage.value = 'User updated successfully'
-        setTimeout(() => { successMessage.value = '' }, 3000)
-      } catch (err) {
-        console.error('Failed to edit user', err)
-      }
-    }
-
-    const handleToggleStatus = async (user) => {
-      try {
-        await api.patch(`/users/${user.id}/toggle-status`)
-        await fetchAllUsers()
-        successMessage.value = `User ${user.active ? 'deactivated' : 'activated'} successfully`
-        setTimeout(() => { successMessage.value = '' }, 3000)
-      } catch (err) {
-        console.error('Failed to toggle user status', err)
-      }
-    }
-
     const logout = () => {
       authStore.logout()
       router.push('/login')
     }
 
-    onMounted(() => {
+    onMounted(async () => {
+      // Ensure user data is loaded
+      if (!authStore.user) {
+        await authStore.fetchCurrentUser()
+      }
       appointmentStore.fetchAllAppointments()
       fetchJudges()
       fetchAllUsers()
@@ -563,7 +504,6 @@ export default {
       allUsers,
       successMessage,
       showManageUsers,
-      showSystemSettings,
       showReports,
       getStatusClass,
       toggleDeletedView,
@@ -571,9 +511,6 @@ export default {
       handleUpdateStatus,
       handleReschedule,
       handleAssignJudge,
-      handleAddUser,
-      handleEditUser,
-      handleToggleStatus,
       logout
     }
   }

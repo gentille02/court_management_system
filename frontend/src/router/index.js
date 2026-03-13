@@ -6,7 +6,7 @@ import JudgeDashboard from '../views/JudgeDashboard.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 
 const routes = [
-  { path: '/', redirect: '/login' },
+  { path: '/', component: Login, name: 'Home' },
   { path: '/login', component: Login, name: 'Login' },
   { path: '/register', component: Register, name: 'Register' },
   { 

@@ -58,13 +58,6 @@
             <span class="text-sm font-medium">⚖️ My Cases</span>
           </button>
           <button
-            @click="showSchedule = true"
-            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
-            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
-          >
-            <span class="text-sm font-medium">📅 Schedule</span>
-          </button>
-          <button
             @click="showCaseHistory = true"
             class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
             style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
@@ -161,7 +154,7 @@
               <div>
                 <h3 class="font-semibold mb-2" style="color: var(--text-1);">📄 Uploaded Documents</h3>
                 <div v-if="selectedCase.documents?.length" class="space-y-2">
-                  
+                  <a
                     v-for="(doc, idx) in selectedCase.documents"
                     :key="idx"
                     :href="doc.url"
@@ -246,14 +239,6 @@
       @select="handleCaseSelect"
     />
 
-    <!-- Schedule Modal -->
-    <ScheduleModal
-      :show="showSchedule"
-      :cases="appointmentStore.appointments"
-      :get-status-class="getStatusClass"
-      @close="showSchedule = false"
-    />
-
     <!-- Case History Modal -->
     <div v-if="showCaseHistory"
          @click="showCaseHistory = false"
@@ -297,13 +282,11 @@ import { useAuthStore } from '../stores/auth'
 import { useAppointmentStore } from '../stores/appointment'
 import { useStatusClass } from '../composables/useStatusClass'
 import MyCasesModal from '../components/MyCasesModal.vue'
-import ScheduleModal from '../components/ScheduleModal.vue'
 
 export default {
   name: 'JudgeDashboard',
   components: {
-    MyCasesModal,
-    ScheduleModal
+    MyCasesModal
   },
   setup() {
     const router = useRouter()
@@ -318,7 +301,6 @@ export default {
 
     // Modal visibility
     const showMyCases = ref(false)
-    const showSchedule = ref(false)
     const showCaseHistory = ref(false)
 
     // Computed stats from store
@@ -381,7 +363,11 @@ export default {
       router.push('/login')
     }
 
-    onMounted(() => {
+    onMounted(async () => {
+      // Ensure user data is loaded
+      if (!authStore.user) {
+        await authStore.fetchCurrentUser()
+      }
       appointmentStore.fetchAssignedCases()
     })
 
@@ -393,7 +379,6 @@ export default {
       newDate,
       successMessage,
       showMyCases,
-      showSchedule,
       showCaseHistory,
       inProgressCount,
       completedCount,

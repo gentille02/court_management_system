@@ -26,5 +26,18 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('user')
   }
 
-  return { user, token, isAuthenticated, login, register, logout }
+  // Fetch current user from server (useful if data got lost)
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await api.get('/users/me')
+      user.value = response.data
+      localStorage.setItem('user', JSON.stringify(user.value))
+      return user.value
+    } catch (err) {
+      console.error('Failed to fetch current user', err)
+      return null
+    }
+  }
+
+  return { user, token, isAuthenticated, login, register, logout, fetchCurrentUser }
 })

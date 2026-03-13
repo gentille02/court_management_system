@@ -1,60 +1,83 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="min-h-screen flex items-center justify-center" 
+       style="background: var(--bg-base);">
     <div class="card max-w-md w-full">
-      <h1 class="text-3xl font-bold text-center mb-6">🏛️ Court Management System</h1>
-      
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <span class="text-4xl">⚖️</span>
+        <h1 class="text-3xl font-bold" 
+            style="font-family: 'Syne', sans-serif; color: var(--text-1);">
+          CMS
+        </h1>
+      </div>
+      <p class="text-center mb-6" style="color: var(--text-2);">
+        Court Management System
+      </p>
+
       <form @submit.prevent="handleLogin" class="space-y-4">
         <div>
-          <label for="email" class="block text-sm font-medium mb-1">Email</label>
-          <input 
+          <label for="email" class="block text-sm font-medium mb-1" 
+                 style="color: var(--text-2);">Email</label>
+          <input
             id="email"
-            v-model="email" 
-            type="email" 
-            required 
-            class="input-field focus:ring-blue-500"
-            aria-describedby="email-help"
+            v-model="email"
+            type="email"
+            required
+            class="input-field"
+            autocomplete="email"
           />
         </div>
-        
+
         <div>
-          <label for="password" class="block text-sm font-medium mb-1">Password</label>
-          <input 
+          <label for="password" class="block text-sm font-medium mb-1" 
+                 style="color: var(--text-2);">Password</label>
+          <input
             id="password"
-            v-model="password" 
-            type="password" 
-            required 
-            class="input-field focus:ring-blue-500"
-            aria-describedby="password-help"
+            v-model="password"
+            type="password"
+            required
+            class="input-field"
+            autocomplete="current-password"
           />
         </div>
-        
+
         <div>
-          <label for="role" class="block text-sm font-medium mb-1">Login As</label>
-          <select 
+          <label for="role" class="block text-sm font-medium mb-1" 
+                 style="color: var(--text-2);">Login As</label>
+          <select
             id="role"
-            v-model="role" 
-            class="input-field focus:ring-blue-500"
-            aria-describedby="role-help"
+            v-model="role"
+            required
+            class="input-field"
           >
+            <option value="">-- Select Role --</option>
             <option value="client">Client</option>
             <option value="judge">Judge</option>
             <option value="admin">Administrator</option>
           </select>
         </div>
-        
-        <button 
-          type="submit" 
-          class="w-full btn-primary bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500"
+
+        <button
+          type="submit"
+          :disabled="loading"
+          class="w-full btn-primary"
+          style="background: var(--accent-client); color: white;"
         >
-          Login
+          {{ loading ? 'Logging in...' : 'Login' }}
         </button>
       </form>
-      
-      <p v-if="error" class="mt-4 text-red-600 text-sm text-center" role="alert">{{ error }}</p>
-      
-      <p class="mt-4 text-center text-sm">
-        Don't have an account? 
-        <router-link to="/register" class="text-blue-600 hover:underline font-medium">Register here</router-link>
+
+      <p v-if="error" class="mt-4 text-sm text-center p-3 rounded-lg 
+                              bg-red-100 text-red-800" role="alert">
+        {{ error }}
+      </p>
+
+      <p class="mt-4 text-center text-sm" style="color: var(--text-2);">
+        Don't have an account?
+        <router-link to="/register" 
+                     style="color: var(--accent-client);" 
+                     class="font-medium hover:underline">
+          Register here
+        </router-link>
       </p>
     </div>
   </div>
@@ -63,35 +86,39 @@
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '../utils/api'
+import { useAuthStore } from '../stores/auth'
 
 export default {
   name: 'Login',
   setup() {
     const router = useRouter()
+    const authStore = useAuthStore()
+
     const email = ref('')
     const password = ref('')
-    const role = ref('client')
+    const role = ref('')
+    const loading = ref(false)
     const error = ref('')
 
     const handleLogin = async () => {
+      error.value = ''
+      loading.value = true
       try {
-        const response = await api.post('/auth/login', {
+        await authStore.login({ 
           email: email.value,
           password: password.value,
           role: role.value
         })
-        
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        
-        router.push(`/${role.value}`)
+        // Route based on what the SERVER returned, not what user selected
+        router.push(`/${authStore.user.role}`)
       } catch (err) {
         error.value = err.response?.data?.message || 'Login failed'
+      } finally {
+        loading.value = false
       }
     }
 
-    return { email, password, role, error, handleLogin }
+    return { email, password, role, loading, error, handleLogin }
   }
 }
 </script>

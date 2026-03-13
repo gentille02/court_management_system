@@ -42,7 +42,7 @@
               class="flex-1 px-3 py-2 rounded-lg text-sm font-medium"
               style="background: var(--accent-admin); color: white;"
             >
-              🗑️ Delete
+              ❌ Cancel
             </button>
           </div>
         </article>

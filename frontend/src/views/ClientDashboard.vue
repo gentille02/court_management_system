@@ -285,12 +285,12 @@ export default {
     }
 
     const deleteAppointment = async (id) => {
-      if (!confirm('Are you sure you want to delete this appointment?')) return
+      if (!confirm('Are you sure you want to cancel this appointment?')) return
       try {
         const { default: api } = await import('../utils/api')
         await api.delete(`/appointments/${id}`)
         await appointmentStore.fetchMyAppointments()
-        successMessage.value = 'Appointment deleted successfully'
+        successMessage.value = 'Appointment cancelled successfully'
         setTimeout(() => { successMessage.value = '' }, 3000)
       } catch {
         // silently handle
@@ -302,7 +302,11 @@ export default {
       router.push('/login')
     }
 
-    onMounted(() => {
+    onMounted(async () => {
+      // Ensure user data is loaded
+      if (!authStore.user) {
+        await authStore.fetchCurrentUser()
+      }
       appointmentStore.fetchMyAppointments()
     })
 
