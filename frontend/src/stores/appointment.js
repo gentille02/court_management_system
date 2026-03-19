@@ -50,9 +50,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
     loading.value = true
     error.value = null
     try {
-      await api.post('/appointments', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
+      await api.post('/appointments', formData)
       await fetchMyAppointments()
     } catch (err) {
       error.value = err.response?.data?.message || 'Failed to book appointment'
