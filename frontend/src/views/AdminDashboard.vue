@@ -8,17 +8,17 @@
           <div class="text-4xl">⚖️</div>
           <h1 class="text-3xl font-bold" style="font-family: 'Syne', sans-serif; color: var(--text-1);">CMS</h1>
         </div>
-<<<<<<< HEAD
 
         <!-- Profile Card -->
         <div class="mb-6" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
           <div class="flex flex-col items-center text-center">
             <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-4"
                  style="background: linear-gradient(135deg, var(--accent-admin), #fb7185);">
-              {{ authStore.user?.name?.charAt(0).toUpperCase() || '?' }}
+              {{ user?.name?.charAt(0).toUpperCase() || '?' }}
             </div>
-            <h2 class="text-lg font-bold mb-1" style="color: var(--text-1);">{{ authStore.user?.name }}</h2>
-            <p class="text-sm mb-4" style="color: var(--text-3);">{{ authStore.user?.email }}</p>
+            <h2 class="text-lg font-bold mb-1" style="color: var(--text-1);">{{ user?.name }}</h2>
+            <p class="text-sm mb-2" style="color: var(--text-3);">{{ user?.email }}</p>
+            <p v-if="user?.phone" class="text-sm mb-2" style="color: var(--text-3);">📞 {{ user?.phone }}</p>
             <div class="w-full pt-4" style="border-top: 1px solid var(--border);">
               <p class="text-xs font-semibold mb-2" style="color: var(--text-2); text-transform: uppercase;">Role</p>
               <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
@@ -26,68 +26,27 @@
                 Administrator
               </span>
             </div>
+            <button @click="openEditProfile" class="mt-4 w-full px-3 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
+              style="background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border);">✏️ Edit Profile</button>
           </div>
         </div>
 
         <!-- Navigation -->
         <div class="space-y-2">
-          <button 
-            @click="showManageUsers = true" 
-            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
-            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
-          >
-            <span class="text-sm font-medium">👥 System Users</span>
+          <button @click="goHome" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80 flex items-center"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
+            <span class="text-sm font-medium">🏠 Home</span>
           </button>
-          <button 
-            @click="showReports = true" 
-            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
-            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
-          >
-            <span class="text-sm font-medium">📊 Reports</span>
-          </button>
-          <button 
-            @click="logout" 
-            class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
-            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);"
-          >
-            <span class="text-sm font-medium">🚪 Logout</span>
-          </button>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-6">
-
-=======
-
-        <!-- Profile Card -->
-        <div class="mb-6" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
-          <div class="flex flex-col items-center text-center">
-            <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-4" style="background: linear-gradient(135deg, var(--accent-admin), #fb7185);">
-              {{ user?.name?.charAt(0).toUpperCase() || '?' }}
-            </div>
-            <h2 class="text-lg font-bold mb-1" style="color: var(--text-1);">{{ user?.name }}</h2>
-            <p class="text-sm mb-4" style="color: var(--text-3);">{{ user?.email }}</p>
-            <div class="w-full pt-4" style="border-top: 1px solid var(--border);">
-              <p class="text-xs font-semibold mb-2" style="color: var(--text-2); text-transform: uppercase; letter-spacing: 0.5px;">Role</p>
-              <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold" style="background: rgba(255, 101, 132, 0.15); color: var(--accent-admin);">Administrator</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Navigation -->
-        <div class="space-y-2">
-          <button @click="showManageUsers = true" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80" style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
+          <button @click="showManageUsers = true" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
             <span class="text-sm font-medium">👥 Manage Users</span>
           </button>
-          <button @click="showSystemSettings = true" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80" style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
-            <span class="text-sm font-medium">⚙️ System Settings</span>
-          </button>
-          <button @click="showReports = true" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80" style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
+          <button @click="showReports = true" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
             <span class="text-sm font-medium">📊 Reports</span>
           </button>
-          <button @click="logout" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80" style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
+          <button @click="logout" class="w-full px-4 py-3 rounded-lg text-left transition-all hover:opacity-80"
+            style="background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border);">
             <span class="text-sm font-medium">🚪 Logout</span>
           </button>
         </div>
@@ -96,7 +55,6 @@
 
     <!-- Main Content -->
     <main class="flex-1 p-6">
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
       <!-- Stats Cards -->
       <section aria-label="Appointment Statistics" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <div class="card text-center">
@@ -124,40 +82,26 @@
       <div class="grid md:grid-cols-3 gap-6">
 
         <!-- Appointments List -->
-<<<<<<< HEAD
         <section class="md:col-span-1 card" aria-label="Appointments List">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold" style="color: var(--text-1);">📋 All Appointments</h2>
-            <button
-              @click="toggleDeletedView"
-              class="text-sm px-3 py-1 rounded transition-all hover:opacity-80"
-              style="background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border);"
-            >
-              {{ showDeleted ? 'Active' : 'Cancelled' }}
-            </button>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-1 rounded-full text-xs font-semibold" style="background: var(--bg-hover); color: var(--text-2);">{{ currentAppointments.length }}</span>
+              <button
+                @click="toggleDeletedView"
+                class="text-sm px-3 py-1 rounded transition-all hover:opacity-80"
+                style="background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border);"
+              >
+                {{ showDeleted ? 'Active' : 'Cancelled' }}
+              </button>
+            </div>
           </div>
 
-          <!-- Filter -->
-=======
-        <section class="md:col-span-1 card">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">📋 All Appointments</h2>
-            <button 
-              @click="showDeleted = !showDeleted" 
-              class="text-sm px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
-            >
-              {{ showDeleted ? 'Active' : 'Deleted' }}
-            </button>
-          </div>
-          
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
+          <input v-model="aptSearch" type="text" placeholder="🔍 Search by client or service..." class="input-field mb-3 text-sm" />
+
           <div class="mb-4">
             <label for="filter-status" class="sr-only">Filter by status</label>
-            <select 
-              id="filter-status"
-              v-model="filterStatus" 
-              class="input-field text-sm"
-            >
+            <select id="filter-status" v-model="filterStatus" class="input-field text-sm">
               <option value="">All Status</option>
               <option value="Pending">Pending</option>
               <option value="Approved">Approved</option>
@@ -167,48 +111,36 @@
             </select>
           </div>
 
-<<<<<<< HEAD
-          <!-- Loading state -->
-          <div v-if="appointmentStore.loading" class="text-center py-8" style="color: var(--text-3);">
-            Loading...
-          </div>
-
-          <div v-else-if="currentAppointments.length === 0" 
-               class="text-center py-8" style="color: var(--text-3);">
+          <div v-if="searchedAppointments.length === 0" class="text-center py-8" style="color: var(--text-3);">
             {{ showDeleted ? 'No cancelled appointments' : 'No appointments found' }}
-=======
-          <div v-if="currentAppointments.length === 0" class="text-gray-500 text-center py-8">
-            {{ showDeleted ? 'No deleted appointments' : 'No appointments found' }}
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
           </div>
 
           <div v-else class="space-y-2 max-h-96 overflow-y-auto">
             <button
-              v-for="apt in currentAppointments"
+              v-for="apt in searchedAppointments"
               :key="apt.id"
               @click="selectAppointment(apt)"
               class="w-full text-left p-3 rounded-lg transition-colors"
-              :style="selectedAppointment?.id === apt.id 
-                ? 'background: var(--accent-admin); color: white;' 
+              :style="selectedAppointment?.id === apt.id
+                ? 'background: var(--accent-admin); color: white;'
                 : 'background: var(--bg-hover); color: var(--text-1);'"
             >
               <p class="font-semibold text-sm">{{ apt.service }}</p>
               <p class="text-xs opacity-80">{{ apt.client_name || 'No client name' }}</p>
               <div class="flex justify-between items-center mt-1">
                 <span class="text-xs opacity-70">📅 {{ apt.date }}</span>
-                <span :class="getStatusClass(apt.status)" class="px-2 py-0.5 rounded text-xs">
+                <span :class="getStatusClass(apt.status)" class="px-2 py-0.5 rounded text-xs font-semibold">
                   {{ apt.status }}
                 </span>
               </div>
-              <p v-if="showDeleted && apt.deleted_at" class="text-xs opacity-70 mt-1">🗑️ Deleted: {{ apt.deleted_at }}</p>
+              <p v-if="showDeleted && apt.deleted_at" class="text-xs opacity-70 mt-1">❌ Cancelled: {{ apt.deleted_at }}</p>
             </button>
           </div>
         </section>
 
         <!-- Appointment Details & Actions -->
         <section class="md:col-span-2 card" aria-label="Appointment Details">
-          <div v-if="!selectedAppointment" 
-               class="text-center py-16" style="color: var(--text-3);">
+          <div v-if="!selectedAppointment" class="text-center py-16" style="color: var(--text-3);">
             Select an appointment to manage
           </div>
 
@@ -216,7 +148,6 @@
             <h2 class="text-xl font-bold mb-4" style="color: var(--text-1);">📁 Appointment Details</h2>
 
             <div class="space-y-4">
-<<<<<<< HEAD
               <!-- Details -->
               <div class="p-4 rounded-lg" style="background: var(--bg-hover); border: 1px solid var(--border);">
                 <p style="color: var(--text-1);"><strong>Service:</strong> {{ selectedAppointment.service }}</p>
@@ -225,27 +156,12 @@
                 <p style="color: var(--text-1);"><strong>Date:</strong> {{ selectedAppointment.date }}</p>
                 <p style="color: var(--text-1);">
                   <strong>Status:</strong>
-                  <span :class="getStatusClass(selectedAppointment.status)" 
-                        class="px-2 py-1 rounded text-xs font-semibold ml-1">
+                  <span :class="getStatusClass(selectedAppointment.status)" class="px-2 py-1 rounded text-xs font-semibold ml-1">
                     {{ selectedAppointment.status }}
                   </span>
                 </p>
                 <p v-if="selectedAppointment.description" class="mt-2" style="color: var(--text-2);">
                   <strong style="color: var(--text-1);">Description:</strong> {{ selectedAppointment.description }}
-=======
-              <div class="bg-white p-4 rounded-lg border border-gray-200">
-                <p class="text-gray-900"><strong class="text-gray-900">Service:</strong> {{ selectedAppointment.service }}</p>
-                <p class="text-gray-900"><strong class="text-gray-900">Client:</strong> {{ selectedAppointment.client_name || 'No client name' }}</p>
-                <p class="text-gray-900"><strong class="text-gray-900">Email:</strong> {{ selectedAppointment.client_email || 'No email' }}</p>
-                <p class="text-gray-900"><strong class="text-gray-900">Date:</strong> {{ selectedAppointment.date }}</p>
-                <p class="text-gray-900"><strong class="text-gray-900">Status:</strong> 
-                  <span :class="getStatusClass(selectedAppointment.status)" class="px-2 py-1 rounded text-xs font-semibold">
-                    {{ selectedAppointment.status }}
-                  </span>
-                </p>
-                <p v-if="selectedAppointment.description" class="mt-2 text-gray-900">
-                  <strong class="text-gray-900">Description:</strong> {{ selectedAppointment.description }}
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
                 </p>
               </div>
 
@@ -269,21 +185,14 @@
               </div>
 
               <!-- Admin Actions -->
-<<<<<<< HEAD
               <div v-if="!showDeleted" class="border-t pt-4" style="border-color: var(--border);">
                 <h3 class="font-semibold mb-3" style="color: var(--text-1);">⚙️ Admin Actions</h3>
 
-=======
-              <div v-if="!showDeleted" class="border-t pt-4">
-                <h3 class="font-semibold mb-3">⚙️ Admin Actions</h3>
-                
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
                 <div class="space-y-3">
                   <!-- Approve -->
                   <button
                     v-if="selectedAppointment.status === 'Pending'"
-                    @click="handleUpdateStatus('Approved')"
-                    :disabled="appointmentStore.loading"
+                    @click="updateStatus('Approved')"
                     class="w-full btn-primary"
                     style="background: #16a34a; color: white;"
                   >
@@ -292,8 +201,7 @@
 
                   <!-- Reject -->
                   <div v-if="selectedAppointment.status === 'Pending'">
-                    <label for="reject-reason" class="block text-sm font-medium mb-1"
-                           style="color: var(--text-2);">Reason for rejection</label>
+                    <label for="reject-reason" class="block text-sm font-medium mb-1" style="color: var(--text-2);">Reason for rejection</label>
                     <input
                       id="reject-reason"
                       v-model="rejectReason"
@@ -302,8 +210,7 @@
                       class="input-field mb-2"
                     />
                     <button
-                      @click="handleUpdateStatus('Rejected')"
-                      :disabled="appointmentStore.loading"
+                      @click="updateStatus('Rejected')"
                       class="w-full btn-primary"
                       style="background: #dc2626; color: white;"
                     >
@@ -313,55 +220,31 @@
 
                   <!-- Reschedule -->
                   <div>
-                    <label for="new-date" class="block text-sm font-medium mb-1"
-                           style="color: var(--text-2);">Reschedule to:</label>
+                    <label for="new-date" class="block text-sm font-medium mb-1" style="color: var(--text-2);">Reschedule to:</label>
                     <div class="flex gap-2">
-                      <input
-                        id="new-date"
-                        v-model="newDate"
-                        type="date"
-                        class="input-field flex-1"
-                      />
-                      <button 
-                        @click="handleReschedule" 
-                        :disabled="appointmentStore.loading"
-                        class="btn-admin"
-                      >
-                        📅 Reschedule
-                      </button>
+                      <input id="new-date" v-model="newDate" type="date" class="input-field flex-1" />
+                      <button @click="reschedule" class="btn-admin">📅 Reschedule</button>
                     </div>
                   </div>
 
                   <!-- Assign Judge -->
                   <div v-if="selectedAppointment.status === 'Approved'">
-                    <label for="assign-judge" class="block text-sm font-medium mb-1"
-                           style="color: var(--text-2);">Assign Judge:</label>
+                    <label for="assign-judge" class="block text-sm font-medium mb-1" style="color: var(--text-2);">Assign Judge:</label>
                     <div class="flex gap-2">
-                      <select 
-                        id="assign-judge"
-                        v-model="assignedJudge" 
-                        class="input-field flex-1"
-                      >
+                      <select id="assign-judge" v-model="assignedJudge" class="input-field flex-1">
                         <option value="">Select Judge</option>
                         <option v-for="judge in judges" :key="judge.id" :value="judge.id">
                           {{ judge.name }}
                         </option>
                       </select>
-                      <button 
-                        @click="handleAssignJudge" 
-                        :disabled="appointmentStore.loading"
-                        class="btn-admin"
-                      >
-                        Assign
-                      </button>
+                      <button @click="assignJudge" class="btn-admin">Assign</button>
                     </div>
                   </div>
 
                   <!-- Complete -->
                   <button
                     v-if="selectedAppointment.status === 'Approved' || selectedAppointment.status === 'Rescheduled'"
-                    @click="handleUpdateStatus('Completed')"
-                    :disabled="appointmentStore.loading"
+                    @click="updateStatus('Completed')"
                     class="w-full btn-primary"
                     style="background: #4b5563; color: white;"
                   >
@@ -374,79 +257,27 @@
         </section>
       </div>
 
-      <!-- Feedback Messages -->
-      <p v-if="appointmentStore.error" 
-         class="mt-4 p-3 rounded-lg text-center bg-red-100 text-red-800" 
-         role="alert">
-        ❌ {{ appointmentStore.error }}
+      <p v-if="message" :class="messageClass" class="mt-4 p-3 rounded-lg text-center" role="alert">
+        {{ message }}
       </p>
-      <p v-if="successMessage" 
-         class="mt-4 p-3 rounded-lg text-center bg-green-100 text-green-800" 
-         role="alert">
-        ✅ {{ successMessage }}
-      </p>
+
+      <!-- Footer -->
+      <footer class="mt-10 pt-4 text-center text-xs" style="color: var(--text-3); border-top: 1px solid var(--border);">
+        © {{ new Date().getFullYear() }} Court Management System. All rights reserved.
+      </footer>
     </main>
 
-<<<<<<< HEAD
     <!-- Manage Users Modal -->
     <ManageUsersModal
       :show="showManageUsers"
       :users="allUsers"
       @close="showManageUsers = false"
-      @user-added="async () => { await fetchAllUsers(); await fetchJudges(); }"
+      @refresh="fetchAllUsers(); fetchJudges();"
     />
 
     <!-- Reports Modal -->
-    <div v-if="showReports" 
-         @click="showReports = false" 
-         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div @click.stop class="rounded-lg p-6 max-w-md w-full mx-4"
-           style="background: var(--bg-card); border: 1px solid var(--border);">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-xl font-bold" style="color: var(--text-1);">📊 Reports</h3>
-          <button @click="showReports = false" 
-                  class="text-2xl" style="color: var(--text-2);">&times;</button>
-        </div>
-        <div class="space-y-3" style="color: var(--text-2);">
-          <p>📈 Total Appointments: {{ appointmentStore.appointments.length }}</p>
-          <p>✅ Completed: {{ stats.completed }}</p>
-          <p>⏳ Pending: {{ stats.pending }}</p>
-          <p>❌ Rejected: {{ stats.rejected }}</p>
-=======
-    <!-- Modals -->
-    <div v-if="showManageUsers" @click="showManageUsers = false" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div @click.stop class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4" style="background: var(--bg-card); border: 1px solid var(--border);">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-xl font-bold" style="color: var(--text-1);">👥 Manage Users</h3>
-          <button @click="showManageUsers = false" class="text-2xl" style="color: var(--text-2);">&times;</button>
-        </div>
-        <div class="space-y-3">
-          <div v-for="judge in judges" :key="judge.id" class="p-3 rounded-lg" style="background: var(--bg-hover); border: 1px solid var(--border);">
-            <p class="font-semibold" style="color: var(--text-1);">{{ judge.name }}</p>
-            <p class="text-sm" style="color: var(--text-2);">{{ judge.email }}</p>
-            <span class="text-xs px-2 py-1 rounded" style="background: rgba(167, 139, 250, 0.15); color: var(--accent-judge);">Judge</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="showSystemSettings" @click="showSystemSettings = false" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div @click.stop class="bg-white rounded-lg p-6 max-w-md w-full mx-4" style="background: var(--bg-card); border: 1px solid var(--border);">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-xl font-bold" style="color: var(--text-1);">⚙️ System Settings</h3>
-          <button @click="showSystemSettings = false" class="text-2xl" style="color: var(--text-2);">&times;</button>
-        </div>
-        <div class="space-y-3" style="color: var(--text-2);">
-          <p>🔔 Notifications: Enabled</p>
-          <p>📧 Email Alerts: Active</p>
-          <p>🔒 Security: 2FA Disabled</p>
-          <p>🌐 Language: English</p>
-        </div>
-      </div>
-    </div>
-
     <div v-if="showReports" @click="showReports = false" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div @click.stop class="bg-white rounded-lg p-6 max-w-md w-full mx-4" style="background: var(--bg-card); border: 1px solid var(--border);">
+      <div @click.stop class="rounded-lg p-6 max-w-md w-full mx-4" style="background: var(--bg-card); border: 1px solid var(--border);">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold" style="color: var(--text-1);">📊 Reports</h3>
           <button @click="showReports = false" class="text-2xl" style="color: var(--text-2);">&times;</button>
@@ -454,10 +285,40 @@
         <div class="space-y-3" style="color: var(--text-2);">
           <p>📈 Total Appointments: {{ appointments.length }}</p>
           <p>✅ Completed: {{ stats.completed }}</p>
+          <p>🟢 Approved: {{ stats.approved }}</p>
           <p>⏳ Pending: {{ stats.pending }}</p>
-          <p>📅 This Month: {{ appointments.length }}</p>
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
+          <p>❌ Rejected: {{ stats.rejected }}</p>
+          <p>📅 Rescheduled: {{ stats.rescheduled }}</p>
         </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div v-if="showEditProfile" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="rounded-lg p-6 w-full max-w-md mx-4" style="background: var(--bg-card); border: 1px solid var(--border);">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold" style="color: var(--text-1);">✏️ Edit Profile</h3>
+          <button @click="showEditProfile = false" class="text-xl hover:opacity-70" style="color: var(--text-2);">✕</button>
+        </div>
+        <form @submit.prevent="saveProfile" class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1" style="color: var(--text-2);">Email</label>
+            <input v-model="profileForm.email" type="email" required class="input-field" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" style="color: var(--text-2);">Phone</label>
+            <input v-model="profileForm.phone" type="tel" placeholder="Phone number" class="input-field" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" style="color: var(--text-2);">New Password <span style="color: var(--text-3); font-weight: 400;">(leave blank to keep current)</span></label>
+            <input v-model="profileForm.password" type="password" minlength="6" placeholder="New password" class="input-field" />
+          </div>
+          <p v-if="profileMessage" class="text-sm" :class="profileSuccess ? 'text-green-600' : 'text-red-600'">{{ profileMessage }}</p>
+          <div class="flex gap-3 pt-1">
+            <button type="submit" class="flex-1 px-4 py-2 rounded-lg text-white font-medium" style="background: var(--accent-admin);">Save Changes</button>
+            <button type="button" @click="showEditProfile = false" class="flex-1 px-4 py-2 rounded-lg font-medium" style="background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border);">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -466,93 +327,98 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
-import { useAppointmentStore } from '../stores/appointment'
-import { useStatusClass } from '../composables/useStatusClass'
-import ManageUsersModal from '../components/ManageUsersModal.vue'
 import api from '../utils/api'
+import ManageUsersModal from '../components/ManageUsersModal.vue'
 
 export default {
   name: 'AdminDashboard',
   components: { ManageUsersModal },
   setup() {
     const router = useRouter()
-<<<<<<< HEAD
-    const authStore = useAuthStore()
-    const appointmentStore = useAppointmentStore()
-    const { getStatusClass } = useStatusClass()
-
-    const selectedAppointment = ref(null)
-    const filterStatus = ref('')
-    const showDeleted = ref(false)
-    const deletedAppointments = ref([])
-=======
-    const user = ref(JSON.parse(localStorage.getItem('user') || '{}'))
+    const user = ref(JSON.parse(sessionStorage.getItem('user') || '{}'))
     const appointments = ref([])
     const deletedAppointments = ref([])
     const selectedAppointment = ref(null)
     const filterStatus = ref('')
     const showDeleted = ref(false)
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
     const rejectReason = ref('')
     const newDate = ref('')
     const assignedJudge = ref('')
     const judges = ref([])
-<<<<<<< HEAD
-    const allUsers = ref([])
-    const successMessage = ref('')
-=======
     const message = ref('')
     const messageClass = ref('')
     const showManageUsers = ref(false)
-    const showSystemSettings = ref(false)
     const showReports = ref(false)
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
+    const allUsers = ref([])
+    const aptSearch = ref('')
+    const showEditProfile = ref(false)
+    const profileMessage = ref('')
+    const profileSuccess = ref(false)
+    const profileForm = ref({ email: '', phone: '', password: '' })
 
-    // Modal visibility
-    const showManageUsers = ref(false)
-    const showReports = ref(false)
+    const openEditProfile = () => {
+      profileForm.value = { email: user.value.email || '', phone: user.value.phone || '', password: '' }
+      profileMessage.value = ''
+      showEditProfile.value = true
+    }
 
-    // Stats computed from store
+    const saveProfile = async () => {
+      profileMessage.value = ''
+      try {
+        const payload = { email: profileForm.value.email, phone: profileForm.value.phone }
+        if (profileForm.value.password) payload.password = profileForm.value.password
+        const res = await api.patch('/users/me', payload)
+        user.value = { ...user.value, ...res.data.user }
+        sessionStorage.setItem('user', JSON.stringify(user.value))
+        profileMessage.value = 'Profile updated successfully!'
+        profileSuccess.value = true
+      } catch (err) {
+        profileMessage.value = err.response?.data?.message || 'Failed to update profile'
+        profileSuccess.value = false
+      }
+    }
+
+    const searchedAppointments = computed(() => {
+      const q = aptSearch.value.toLowerCase()
+      if (!q) return currentAppointments.value
+      return currentAppointments.value.filter(a =>
+        a.service?.toLowerCase().includes(q) ||
+        a.client_name?.toLowerCase().includes(q)
+      )
+    })
+
+    const fetchAllUsers = async () => {
+      try {
+        const res = await api.get('/users')
+        allUsers.value = res.data
+      } catch (err) {
+        console.error('Failed to fetch users', err)
+      }
+    }
+
     const stats = computed(() => ({
-      pending: appointmentStore.appointments.filter(a => a.status === 'Pending').length,
-      approved: appointmentStore.appointments.filter(a => a.status === 'Approved').length,
-      rejected: appointmentStore.appointments.filter(a => a.status === 'Rejected').length,
-      rescheduled: appointmentStore.appointments.filter(a => a.status === 'Rescheduled').length,
-      completed: appointmentStore.appointments.filter(a => a.status === 'Completed').length
+      pending: appointments.value.filter(a => a.status === 'Pending').length,
+      approved: appointments.value.filter(a => a.status === 'Approved').length,
+      rejected: appointments.value.filter(a => a.status === 'Rejected').length,
+      rescheduled: appointments.value.filter(a => a.status === 'Rescheduled').length,
+      completed: appointments.value.filter(a => a.status === 'Completed').length
     }))
 
     const filteredAppointments = computed(() => {
-      if (!filterStatus.value) return appointmentStore.appointments
-      return appointmentStore.appointments.filter(a => a.status === filterStatus.value)
+      if (!filterStatus.value) return appointments.value
+      return appointments.value.filter(a => a.status === filterStatus.value)
     })
 
-<<<<<<< HEAD
     const currentAppointments = computed(() =>
       showDeleted.value ? deletedAppointments.value : filteredAppointments.value
     )
 
-    const toggleDeletedView = async () => {
-      showDeleted.value = !showDeleted.value
-      if (showDeleted.value && deletedAppointments.value.length === 0) {
-        await fetchDeletedAppointments()
-      }
-    }
-
-    const fetchDeletedAppointments = async () => {
-=======
-    const currentAppointments = computed(() => {
-      if (showDeleted.value) return deletedAppointments.value
-      return filteredAppointments.value
-    })
-
     const fetchAppointments = async () => {
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
       try {
-        const response = await api.get('/appointments/deleted')
-        deletedAppointments.value = response.data
+        const response = await api.get('/appointments')
+        appointments.value = response.data
       } catch (err) {
-        console.error('Failed to fetch deleted appointments', err)
+        console.error('Failed to fetch appointments', err)
       }
     }
 
@@ -565,21 +431,19 @@ export default {
       }
     }
 
-<<<<<<< HEAD
-    const fetchAllUsers = async () => {
-      try {
-        const response = await api.get('/users')
-        allUsers.value = response.data
-      } catch (err) {
-        console.error('Failed to fetch users', err)
-=======
     const fetchDeletedAppointments = async () => {
       try {
         const response = await api.get('/appointments/deleted')
         deletedAppointments.value = response.data
       } catch (err) {
         console.error('Failed to fetch deleted appointments', err)
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
+      }
+    }
+
+    const toggleDeletedView = async () => {
+      showDeleted.value = !showDeleted.value
+      if (showDeleted.value && deletedAppointments.value.length === 0) {
+        await fetchDeletedAppointments()
       }
     }
 
@@ -587,56 +451,64 @@ export default {
       selectedAppointment.value = apt
       rejectReason.value = ''
       newDate.value = ''
-      assignedJudge.value = apt.assignedJudge || ''
+      assignedJudge.value = apt.judge_id || ''
     }
 
-    const handleUpdateStatus = async (status) => {
+    const updateStatus = async (status) => {
       if (status === 'Rejected' && !rejectReason.value) {
+        message.value = '⚠️ Please provide a reason for rejection'
+        messageClass.value = 'bg-yellow-100 text-yellow-800'
         return
       }
       try {
-        await appointmentStore.updateStatus(
-          selectedAppointment.value.id,
+        await api.patch(`/appointments/${selectedAppointment.value.id}/status`, {
           status,
-          status === 'Rejected' ? rejectReason.value : undefined
-        )
-        successMessage.value = `Appointment ${status.toLowerCase()} successfully`
-        selectedAppointment.value = null
-        setTimeout(() => { successMessage.value = '' }, 3000)
-      } catch {
-        // error shown from store
-      }
-    }
-
-    const handleReschedule = async () => {
-      if (!newDate.value) return
-      try {
-        await appointmentStore.reschedule(selectedAppointment.value.id, newDate.value)
-        await appointmentStore.fetchAllAppointments()
-        successMessage.value = 'Appointment rescheduled successfully'
-        newDate.value = ''
-        setTimeout(() => { successMessage.value = '' }, 3000)
-      } catch {
-        // error shown from store
-      }
-    }
-
-    const handleAssignJudge = async () => {
-      if (!assignedJudge.value) return
-      try {
-        await api.patch(`/appointments/${selectedAppointment.value.id}/assign`, {
-          judgeId: assignedJudge.value
+          remarks: status === 'Rejected' ? rejectReason.value : undefined
         })
-        await appointmentStore.fetchAllAppointments()
-        successMessage.value = 'Judge assigned successfully'
-        setTimeout(() => { successMessage.value = '' }, 3000)
+        message.value = `✅ Appointment ${status.toLowerCase()} successfully`
+        messageClass.value = 'bg-green-100 text-green-800'
+        fetchAppointments()
       } catch (err) {
-        console.error('Failed to assign judge', err)
+        message.value = '❌ Failed to update status'
+        messageClass.value = 'bg-red-100 text-red-800'
       }
     }
 
-<<<<<<< HEAD
-=======
+    const reschedule = async () => {
+      if (!newDate.value) {
+        message.value = '⚠️ Please select a new date'
+        messageClass.value = 'bg-yellow-100 text-yellow-800'
+        return
+      }
+      try {
+        await api.patch(`/appointments/${selectedAppointment.value.id}/reschedule`, { date: newDate.value })
+        message.value = '✅ Appointment rescheduled successfully'
+        messageClass.value = 'bg-green-100 text-green-800'
+        newDate.value = ''
+        fetchAppointments()
+      } catch (err) {
+        message.value = '❌ Failed to reschedule'
+        messageClass.value = 'bg-red-100 text-red-800'
+      }
+    }
+
+    const assignJudge = async () => {
+      if (!assignedJudge.value) {
+        message.value = '⚠️ Please select a judge'
+        messageClass.value = 'bg-yellow-100 text-yellow-800'
+        return
+      }
+      try {
+        await api.patch(`/appointments/${selectedAppointment.value.id}/assign`, { judgeId: assignedJudge.value })
+        message.value = '✅ Judge assigned successfully'
+        messageClass.value = 'bg-green-100 text-green-800'
+        fetchAppointments()
+      } catch (err) {
+        message.value = '❌ Failed to assign judge'
+        messageClass.value = 'bg-red-100 text-red-800'
+      }
+    }
+
     const getStatusClass = (status) => {
       const classes = {
         'Pending': 'bg-yellow-200 text-yellow-900',
@@ -648,73 +520,57 @@ export default {
       return classes[status] || 'bg-gray-300 text-gray-900'
     }
 
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
     const logout = () => {
-      authStore.logout()
+      sessionStorage.removeItem('token')
+      sessionStorage.removeItem('user')
       router.push('/login')
     }
 
-    onMounted(async () => {
-      // Ensure user data is loaded
-      if (!authStore.user) {
-        await authStore.fetchCurrentUser()
-      }
-      appointmentStore.fetchAllAppointments()
+    const goHome = () => {
+      router.push('/')
+    }
+
+    onMounted(() => {
+      fetchAppointments()
       fetchJudges()
-<<<<<<< HEAD
       fetchAllUsers()
     })
 
     return {
-      authStore,
-      appointmentStore,
+      user,
+      appointments,
+      deletedAppointments,
       selectedAppointment,
       filterStatus,
       showDeleted,
-=======
-      fetchDeletedAppointments()
-    })
-
-    return { 
-      user,
-      appointments, 
-      deletedAppointments,
-      selectedAppointment, 
-      filterStatus, 
-      showDeleted,
-      filteredAppointments,
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
       currentAppointments,
       stats,
       rejectReason,
       newDate,
       assignedJudge,
       judges,
-<<<<<<< HEAD
-      allUsers,
-      successMessage,
-      showManageUsers,
-      showReports,
-      getStatusClass,
-      toggleDeletedView,
-      selectAppointment,
-      handleUpdateStatus,
-      handleReschedule,
-      handleAssignJudge,
-      logout
-=======
-      message, 
+      message,
       messageClass,
       showManageUsers,
-      showSystemSettings,
       showReports,
-      selectAppointment, 
-      updateStatus, 
+      allUsers,
+      fetchAllUsers,
+      aptSearch,
+      searchedAppointments,
+      showEditProfile,
+      profileForm,
+      profileMessage,
+      profileSuccess,
+      openEditProfile,
+      saveProfile,
+      toggleDeletedView,
+      selectAppointment,
+      updateStatus,
       reschedule,
       assignJudge,
-      getStatusClass, 
-      logout 
->>>>>>> 2fe3ffefc7bcfb46e20d5e47f90038c4931fe859
+      getStatusClass,
+      logout,
+      goHome
     }
   }
 }
