@@ -11,7 +11,7 @@ A comprehensive web-based Court Management System with role-based access for Cli
 - Track appointment status in real-time
 - Receive status notifications
 - **Edit pending appointments**
-- **Delete pending appointments** (soft delete)
+- **Cancel pending appointments** 
 
 ### Judge Features
 - View assigned cases

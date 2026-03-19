@@ -9,6 +9,10 @@
           CMS
         </h1>
       </div>
+      <button @click="goHome" class="w-full px-4 py-2 mb-4 rounded-lg text-sm font-medium transition-all hover:opacity-80"
+              style="background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border);">
+        🏠 Back to Home
+      </button>
       <p class="text-center mb-6" style="color: var(--text-2);">
         Court Management System
       </p>
@@ -118,7 +122,11 @@ export default {
       }
     }
 
-    return { email, password, role, loading, error, handleLogin }
+    const goHome = () => {
+      router.push('/')
+    }
+
+    return { email, password, role, loading, error, handleLogin, goHome }
   }
 }
 </script>
