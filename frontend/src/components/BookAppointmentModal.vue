@@ -24,7 +24,7 @@
 
         <div>
           <label class="block text-sm font-medium mb-1" style="color: var(--text-2);">Preferred Date</label>
-          <input v-model="formData.date" type="date" required class="input-field" />
+          <input v-model="formData.date" type="date" required class="input-field" :min="today" />
         </div>
 
         <div>
@@ -58,6 +58,11 @@ export default {
     show: Boolean,
     formData: Object
   },
-  emits: ['close', 'submit', 'file-upload']
+  emits: ['close', 'submit', 'file-upload'],
+  computed: {
+    today() {
+      return new Date().toISOString().split('T')[0]
+    }
+  }
 }
 </script>
