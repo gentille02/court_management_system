@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import LandingPage from '../views/LandingPage.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import ClientDashboard from '../views/ClientDashboard.vue'
@@ -6,7 +7,7 @@ import JudgeDashboard from '../views/JudgeDashboard.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 
 const routes = [
-  { path: '/', component: Login, name: 'Home' },
+  { path: '/', component: LandingPage, name: 'Home' },
   { path: '/login', component: Login, name: 'Login' },
   { path: '/register', component: Register, name: 'Register' },
   { 
@@ -35,9 +36,9 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token')
-  const user = JSON.parse(localStorage.getItem('user') || '{}')
-  const publicRoutes = ['/login', '/register']
+  const token = sessionStorage.getItem('token')
+  const user = JSON.parse(sessionStorage.getItem('user') || '{}')
+  const publicRoutes = ['/', '/login', '/register']
 
   // Not logged in trying to access protected route
   if (to.meta.requiresAuth && !token) {
@@ -51,11 +52,6 @@ router.beforeEach((to, from, next) => {
       return next(`/${user.role}`)
     }
     return next('/login')
-  }
-
-  // Already logged in trying to visit login/register
-  if (publicRoutes.includes(to.path) && token) {
-    return next(`/${user.role}`)
   }
 
   next()
