@@ -3,16 +3,16 @@ import { ref, computed } from 'vue'
 import api from '../utils/api'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
-  const token = ref(localStorage.getItem('token') || '')
+  const user = ref(JSON.parse(sessionStorage.getItem('user') || 'null'))
+  const token = ref(sessionStorage.getItem('token') || '')
   const isAuthenticated = computed(() => !!token.value)
 
   const login = async (credentials) => {
     const response = await api.post('/auth/login', credentials)
     token.value = response.data.token
     user.value = response.data.user
-    localStorage.setItem('token', token.value)
-    localStorage.setItem('user', JSON.stringify(user.value))
+    sessionStorage.setItem('token', token.value)
+    sessionStorage.setItem('user', JSON.stringify(user.value))
   }
 
   const register = async (userData) => {
@@ -22,16 +22,15 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = () => {
     token.value = ''
     user.value = null
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('user')
   }
 
-  // Fetch current user from server (useful if data got lost)
   const fetchCurrentUser = async () => {
     try {
       const response = await api.get('/users/me')
       user.value = response.data
-      localStorage.setItem('user', JSON.stringify(user.value))
+      sessionStorage.setItem('user', JSON.stringify(user.value))
       return user.value
     } catch (err) {
       console.error('Failed to fetch current user', err)
